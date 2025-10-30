@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>운명의 이상형 점검 키트</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            background: #f5f5f5;
+            padding: 20px 30px;
+        }
+
+        .progress-bar-bg {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .intro-screen {
+            text-align: center;
+        }
+
+        .intro-screen h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .intro-screen p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-button {
+            background: #f8f8f8;
+            border: 2px solid #e0e0e0;
+            padding: 18px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .option-button:hover {
+            background: #f0f0ff;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .result-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-container.active {
+            display: block;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .result-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .result-subtitle {
+            font-size: 20px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .top-categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .top-category-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .result-description {
+            background: #f8f8ff;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            line-height: 1.8;
+            font-size: 16px;
+            color: #444;
+        }
+
+        .result-description p {
+            margin-bottom: 15px;
+        }
+
+        .example-box {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .example-box h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .example-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .example-box li {
+            padding: 8px 0;
+            color: #555;
+        }
+
+        .example-box li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .score-breakdown {
+            background: #f5f5f5;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .score-breakdown h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .score-label {
+            width: 100px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .score-bar-container {
+            flex: 1;
+            background: #e0e0e0;
+            height: 24px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 0 15px;
+        }
+
+        .score-bar-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .score-value {
+            font-weight: 600;
+            color: #333;
+            width: 50px;
+            text-align: right;
+        }
+
+        .restart-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: transform 0.2s;
+            font-weight: 600;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .restart-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .question-text {
+                font-size: 20px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .result-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💕 운명의 이상형 점검 키트</h1>
+        </div>
+
+        <div class="progress-container" id="progressContainer" style="display: none;">
+            <div class="progress-bar-bg">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText"></div>
+        </div>
+
+        <div class="content">
+            <!-- 인트로 화면 -->
+            <div id="introScreen" class="intro-screen">
+                <h2>당신의 진짜 이상형을 찾아보세요</h2>
+                <p style="font-size: 18px; font-weight: 600; color: #667eea; margin-bottom: 20px;">이상형 감으로 찾지 말자!</p>
+                <div style="text-align: left; max-width: 500px; margin: 0 auto 30px;">
+                    <p style="margin-bottom: 12px;">👉 나를 움직이게 하는 결정적인 조건</p>
+                    <p style="margin-bottom: 12px;">👉 사실은 중요하지 않았던 기준</p>
+                    <p style="margin-bottom: 12px;">👉 나만의 현실적인 이상형 조합</p>
+                </div>
+                <p>총 <strong>5개 분야</strong>에서 <strong>15개의 질문</strong>에 답해주세요.</p>
+                <div style="margin: 30px 0;">
+                    <span class="category-badge">💭 가치관</span>
+                    <span class="category-badge">💰 경제력</span>
+                    <span class="category-badge">✨ 외모</span>
+                    <span class="category-badge">📚 학벌</span>
+                    <span class="category-badge">🏠 집안배경</span>
+                </div>
+                <p style="margin-top: 20px;">테스트가 끝나면 당신을 움직이게 하는 <strong>결정적인 조건 3가지</strong>를 알려드립니다.</p>
+                <button class="start-button" onclick="startTest()">시작하기</button>
+            </div>
+
+            <!-- 질문 화면 -->
+            <div id="questionScreen" style="display: none;">
+                <div id="questionContainer"></div>
+            </div>
+
+            <!-- 결과 화면 -->
+            <div id="resultScreen" class="result-container">
+                <div class="result-header">
+                    <h2 class="result-title" id="resultTitle"></h2>
+                    <div class="result-subtitle" id="resultSubtitle"></div>
+                    <div class="top-categories" id="topCategories"></div>
+                </div>
+                <div class="result-description" id="resultDescription"></div>
+                <div class="score-breakdown">
+                    <h3>📊 분야별 점수</h3>
+                    <div id="scoreBreakdown"></div>
+                </div>
+                <button class="restart-button" onclick="location.reload()">다시 테스트하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // 가치관 (3문항)
+            {
+                category: "가치관",
+                categoryEmoji: "💭",
+                question: "데이트 중 의견이 다를 때 당신은 어떻게 하시나요?",
+                options: [
+                    { text: "그냥 따르는 편이다.", score: 1 },
+                    { text: "조금 불편하지만 분위기를 위해 맞춰주는 편이다.", score: 2 },
+                    { text: "서로 만족할 수 있는 절충점을 찾아보려 한다.", score: 3 },
+                    { text: "가치관이 맞지 않으면 만남을 지속할 수 없다.", score: 4 }
+                ]
+            },
+            {
+                category: "가치관",
+                categoryEmoji: "💭",
+                question: "연인과 미래에 대해 이야기할 때 당신은 어떤 편인가요?",
+                options: [
+                    { text: "아직 먼 이야기라, 그때 가서 생각하면 된다고 본다.", score: 1 },
+                    { text: "방향성 정도만 가볍게 공유하면 충분하다.", score: 2 },
+                    { text: "중요한 가치관은 서로 맞춰보려 한다.", score: 3 },
+                    { text: "인생관이 완전히 일치해야 오래 갈 수 있다고 생각한다.", score: 4 }
+                ]
+            },
+            {
+                category: "가치관",
+                categoryEmoji: "💭",
+                question: "상대방의 취미나 관심사가 나와 다르다면?",
+                options: [
+                    { text: "전혀 상관없다.", score: 1 },
+                    { text: "조금 아쉽지만, 꼭 같을 필요는 없다고 생각한다.", score: 2 },
+                    { text: "몇 가지는 겹치면 더 즐거울 것 같다.", score: 3 },
+                    { text: "주요 관심사는 어느 정도 공유하고 싶다.", score: 4 }
+                ]
+            },
+            
+            // 경제력 (3문항)
+            {
+                category: "경제력",
+                categoryEmoji: "💰",
+                question: "상대의 자산 수준은 얼마나 중요하다고 생각하시나요?",
+                options: [
+                    { text: "사랑이 우선이다. 자산이 없어도 함께 만들어가면 된다.", score: 1 },
+                    { text: "기본적인 주거 안정(전세 보증금 등)만 있으면 충분하다.", score: 2 },
+                    { text: "일정 수준의 자산(수도권 외 자가나 전세금·예금 등)이 있으면 좋다.", score: 3 },
+                    { text: "확실한 경제적 기반(부동산·예금 등 자산 5~10억대 이상)은 필수라고 생각한다.", score: 4 }
+                ]
+            },
+            {
+                category: "경제력",
+                categoryEmoji: "💰",
+                question: "상대의 직업이나 수입 수준은 얼마나 중요하게 생각하나요?",
+                options: [
+                    { text: "직업이나 연봉은 크게 중요하지 않다.", score: 1 },
+                    { text: "최소한 자기 생활비는 감당할 수 있으면 된다.", score: 2 },
+                    { text: "높은 연봉은 아니더라도 안정적인 수입이 있으면 좋다.", score: 3 },
+                    { text: "높은 연봉이나 경제적 성취가 매력적으로 느껴진다.", score: 4 }
+                ]
+            },
+            {
+                category: "경제력",
+                categoryEmoji: "💰",
+                question: "경제관념이 달라 문제가 생긴다면 어떻게 하시겠어요?",
+                options: [
+                    { text: "사람마다 돈 쓰는 방식은 다르다고 생각한다.", score: 1 },
+                    { text: "대화를 통해 서로의 생각을 맞춰보려 한다.", score: 2 },
+                    { text: "함께 재테크나 소비습관을 공부하며 조율해본다.", score: 3 },
+                    { text: "경제관념이 다르면 미래를 함께하기 어렵다고 느낀다.", score: 4 }
+                ]
+            },
+
+            // 외모 (3문항)
+            {
+                category: "외모",
+                categoryEmoji: "✨",
+                question: "첫인상에서 외모가 차지하는 비중은 어느 정도인가요?",
+                options: [
+                    { text: "거의 신경 쓰지 않는다. 사람의 분위기나 말투가 더 중요하다.", score: 1 },
+                    { text: "깔끔하고 단정하기만 하면 충분하다.", score: 2 },
+                    { text: "어느 정도는 중요하다. 첫인상이 호감의 시작이라 생각한다.", score: 3 },
+                    { text: "시각적 매력이 중요하다. 외모에서 끌리지 않으면 어렵다.", score: 4 }
+                ]
+            },
+            {
+                category: "외모",
+                categoryEmoji: "✨",
+                question: "상대방의 패션 스타일에 대해 어떻게 생각하시나요?",
+                options: [
+                    { text: "전혀 신경 쓰지 않는다.", score: 1 },
+                    { text: "단정하고 깔끔하기만 하면 된다.", score: 2 },
+                    { text: "상황에 맞는 스타일이면 좋다.", score: 3 },
+                    { text: "패션 취향이 나와 잘 맞아야 한다.", score: 4 }
+                ]
+            },
+            {
+                category: "외모",
+                categoryEmoji: "✨",
+                question: "연인의 외적 자기관리에 대해 어떻게 생각하시나요?",
+                options: [
+                    { text: "자연스러움이 좋다.", score: 1 },
+                    { text: "기본적인 청결과 단정함이면 충분하다.", score: 2 },
+                    { text: "어느 정도는 스스로 신경 써줬으면 좋겠다.", score: 3 },
+                    { text: "꾸준한 자기관리가 필수라고 생각한다.", score: 4 }
+                ]
+            },
+
+            // 학벌 (3문항)
+            {
+                category: "학벌",
+                categoryEmoji: "📚",
+                question: "상대방의 학력에 대해 어떻게 생각하시나요?",
+                options: [
+                    { text: "전혀 신경 쓰지 않는다. 사람 됨됨이가 더 중요하다.", score: 1 },
+                    { text: "있으면 좋지만, 없어도 괜찮다.", score: 2 },
+                    { text: "어느 정도 학력은 갖추었으면 좋겠다.", score: 3 },
+                    { text: "학력 기준이 충족되지 않으면 만남을 이어가기 어렵다.", score: 4 }
+                ]
+            },
+            {
+                category: "학벌",
+                categoryEmoji: "📚",
+                question: "연인과의 지적인 대화에 대하여 어떻게 생각하시나요?",
+                options: [
+                    { text: "편하게 이야기할 수 있으면 된다.", score: 1 },
+                    { text: "대화가 자연스럽게 통하기만 하면 충분하다.", score: 2 },
+                    { text: "어느 정도 생각의 깊이나 지적 자극이 있으면 좋다.", score: 3 },
+                    { text: "지적 교류가 잘 되는 사람이 가장 매력적이다.", score: 4 }
+                ]
+            },
+            {
+                category: "학벌",
+                categoryEmoji: "📚",
+                question: "연인이 책이나 공부에 관심이 없다면 어떻게 느끼시나요?",
+                options: [
+                    { text: "전혀 상관없다. 각자 취향이 다를 뿐이다.", score: 1 },
+                    { text: "조금 아쉽지만, 다른 매력이 있으면 된다.", score: 2 },
+                    { text: "배움이나 자기계발에 열린 태도면 좋겠다.", score: 3 },
+                    { text: "지적 호기심이 없으면 매력이 느껴지지 않는다.", score: 4 }
+                ]
+            },
+
+            // 집안배경 (3문항)
+            {
+                category: "집안배경",
+                categoryEmoji: "🏠",
+                question: "상대 부모님의 학력이나 교양에 대해 어떻게 생각하시나요?",
+                options: [
+                    { text: "전혀 신경 쓰지 않는다. 연인과의 관계가 더 중요하다.", score: 1 },
+                    { text: "크게 신경 쓰지 않는다. 기본적인 예의만 있으면 된다.", score: 2 },
+                    { text: "어느 정도 교양이 있으면 더 편할 것 같다.", score: 3 },
+                    { text: "학력이나 교양 수준이 비슷해야 결혼을 진지하게 고려할 수 있다.", score: 4 }
+                ]
+            },
+            {
+                category: "집안배경",
+                categoryEmoji: "🏠",
+                question: "상대방의 가족 가치관이 나와 다르다면 어떻게 하시겠어요?",
+                options: [
+                    { text: "전혀 상관없다. 각자 가정환경이 다를 수 있다고 생각한다.", score: 1 },
+                    { text: "본인만 괜찮다면 크게 문제 삼지 않는다.", score: 2 },
+                    { text: "조금 신경 쓰이지만 대화로 맞춰볼 수 있다.", score: 3 },
+                    { text: "가족 간의 가치관이 비슷해야 결혼을 진지하게 생각할 수 있다.", score: 4 }
+                ]
+            },
+            {
+                category: "집안배경",
+                categoryEmoji: "🏠",
+                question: "상대방 집안 구성원의 사회적 위치에 대해 어떻게 생각하시나요?",
+                options: [
+                    { text: "신경 쓰지 않는다. 사람 자체가 더 중요하다.", score: 1 },
+                    { text: "안정된 직업군이면 좋겠다.", score: 2 },
+                    { text: "사회적으로 인정받는 직업이라면 더 신뢰가 간다.", score: 3 },
+                    { text: "명문대나 전문직 등 사회적 지위가 확실하면 이상적이다.", score: 4 }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let scores = {
+            "가치관": 0,
+            "경제력": 0,
+            "외모": 0,
+            "학벌": 0,
+            "집안배경": 0
+        };
+
+        const categoryShortDesc = {
+            "가치관": "가치관이 잘 맞고",
+            "경제력": "경제적으로 함께 성장할 수 있고",
+            "외모": "외적으로 내 취향에 맞고",
+            "학벌": "지적인 대화가 잘 통하고",
+            "집안배경": "가족관계가 원만한"
+        };
+
+        const categoryExampleText = {
+            "가치관": "인생 목표, 가치관이 잘 맞는 사람",
+            "경제력": "미래를 함께할 수 있을 만큼 경제적으로 안정된 사람",
+            "외모": "호감가는 외모와 스타일을 지닌 사람",
+            "학벌": "높은 지적 수준을 가졌고 잘 교육 받은 사람",
+            "집안배경": "안정된 가정 환경을 가진 사람"
+        };
+
+        const categoryNotImportantText = {
+            "가치관": "가치관이 조금 다르더라도",
+            "경제력": "경제적으로 여유롭지 않더라도",
+            "외모": "외모가 화려하지 않더라도",
+            "학벌": "좋은 대학을 나오지 않았더라도",
+            "집안배경": "집안 배경이 화려하지 않더라도"
+        };
+
+        function startTest() {
+            document.getElementById('introScreen').style.display = 'none';
+            document.getElementById('questionScreen').style.display = 'block';
+            document.getElementById('progressContainer').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                showResult();
+                return;
+            }
+
+            const question = questions[currentQuestionIndex];
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `질문 ${currentQuestionIndex + 1} / ${questions.length}`;
+
+            let html = `
+                <div class="question-container active">
+                    <div class="category-tag">${question.categoryEmoji} ${question.category}</div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options">
+            `;
+
+            question.options.forEach((option, index) => {
+                html += `
+                    <button class="option-button" onclick="selectAnswer('${question.category}', ${option.score})">
+                        ${option.text}
+                    </button>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('questionContainer').innerHTML = html;
+        }
+
+        function selectAnswer(category, score) {
+            scores[category] += score;
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function calculateTopThree() {
+            // 타이브레이커 추가
+            const tiebreakers = {
+                "가치관": 0.05,
+                "경제력": 0.04,
+                "외모": 0.03,
+                "학벌": 0.02,
+                "집안배경": 0.01
+            };
+
+            const adjustedScores = Object.keys(scores).map(category => ({
+                category: category,
+                originalScore: scores[category],
+                adjustedScore: scores[category] + tiebreakers[category]
+            }));
+
+            // 정렬된 점수로 TOP3 추출
+            adjustedScores.sort((a, b) => b.adjustedScore - a.adjustedScore);
+
+            return adjustedScores.slice(0, 3);
+        }
+
+        function showResult() {
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('resultScreen').classList.add('active');
+
+            const topThree = calculateTopThree();
+            const top1 = topThree[0].category;
+            const top2 = topThree[1].category;
+            const top3 = topThree[2].category;
+
+            // 하위 2개 항목 찾기
+            const allCategories = ["가치관", "경제력", "외모", "학벌", "집안배경"];
+            const topCategories = [top1, top2, top3];
+            const bottomTwo = allCategories.filter(cat => !topCategories.includes(cat));
+
+            // 결과 제목 - 한 문장으로 압축, 마지막 항목 처리
+            let desc1 = categoryShortDesc[top1];
+            let desc2 = categoryShortDesc[top2];
+            let desc3 = categoryShortDesc[top3].replace(/고$/, '').replace(/는$/, '').replace(/은$/, ''); // 마지막 조사 제거
+            
+            const shortDescLine = `<${desc1} ${desc2} ${desc3} 사람>`;
+            const resultTitle = `🎉 당신의 이상형은<br>${shortDescLine}`;
+            document.getElementById('resultTitle').innerHTML = resultTitle;
+
+            // 서브타이틀
+            document.getElementById('resultSubtitle').textContent = 
+                `당신이 이성을 볼 때 가장 중요하게 생각하는 것`;
+
+            // TOP 3 배지
+            let topCategoriesHtml = `
+                <div class="top-category-badge">1순위: ${top1}</div>
+                <div class="top-category-badge">2순위: ${top2}</div>
+                <div class="top-category-badge">3순위: ${top3}</div>
+            `;
+            document.getElementById('topCategories').innerHTML = topCategoriesHtml;
+
+            // 예시 항목들 생성
+            let exampleItems = '';
+            [top1, top2, top3].forEach(category => {
+                exampleItems += `<li>${categoryExampleText[category]}</li>`;
+            });
+
+            // 하위 2개 항목에 대한 설명
+            const bottomTwoNames = bottomTwo.map(cat => cat).join('이나 ');
+            const bottomTwoNotImportant = bottomTwo.map(cat => categoryNotImportantText[cat]).join(', ');
+
+            // 마지막 결론 문장 - TOP1과 TOP2 활용
+            const conclusionText = `결국 당신이 진짜 끌리는 사람은 <strong>${categoryShortDesc[top1]} ${categoryShortDesc[top2]}</strong> 사람입니다. 서로의 삶에 안정감과 편안함을 더해줄 수 있는 관계가 가장 큰 매력으로 느껴지는 타입이에요.`;
+
+            // 결과 설명
+            const resultDescription = `
+                <div class="example-box">
+                    <h4>예를 들어,</h4>
+                    <ul>
+                        ${exampleItems}
+                    </ul>
+                    <p style="margin-top: 15px; color: #667eea; font-weight: 600;">당신의 이상형에 꽤 가까운 인물일 수 있어요.</p>
+                </div>
+
+                <p style="margin-top: 25px; line-height: 1.8;">
+                    반면에, <strong>${bottomTwoNames}</strong>은 상대적으로 덜 중요하게 여깁니다. 
+                    ${bottomTwoNotImportant}, 사람 자체가 성실하고 진심을 보여준다면 충분히 마음을 열 수 있는 타입이에요.
+                </p>
+
+                <p style="margin-top: 25px; line-height: 1.8; padding: 20px; background: #f0f0ff; border-radius: 10px;">
+                    ${conclusionText}
+                </p>
+            `;
+            document.getElementById('resultDescription').innerHTML = resultDescription;
+
+            // 점수 분포
+            let scoreBreakdownHtml = '';
+            Object.keys(scores).sort((a, b) => scores[b] - scores[a]).forEach(category => {
+                const percentage = (scores[category] / 12) * 100;
+                scoreBreakdownHtml += `
+                    <div class="score-item">
+                        <div class="score-label">${category}</div>
+                        <div class="score-bar-container">
+                            <div class="score-bar-fill" style="width: ${percentage}%">
+                                ${percentage >= 20 ? scores[category] + '점' : ''}
+                            </div>
+                        </div>
+                        <div class="score-value">${scores[category]}점</div>
+                    </div>
+                `;
+            });
+            document.getElementById('scoreBreakdown').innerHTML = scoreBreakdownHtml;
+        }
+    </script>
+</body>
+</html>
